@@ -2,10 +2,6 @@ package com.dant.centersnapreyclerview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -13,10 +9,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
- * An extension of RecyclerView which provides the ability for an anchor to which views will snap
+ * An extension of RecyclerView which provides the ability for an srv_anchor to which views will snap
  * too. Once a scroll has been completed the RecyclerView will calculate which of it's Views
- * (ViewHolders) is closest to it's anchor and, using the smoothScroll method provided by
+ * (ViewHolders) is closest to it's srv_anchor and, using the smoothScroll method provided by
  * CenterLayoutManager, scroll said View to the correct position on screen.
  */
 public class SnappingRecyclerView extends RecyclerView {
@@ -45,12 +46,12 @@ public class SnappingRecyclerView extends RecyclerView {
 
     private WeakReference<SnappingRecyclerViewListener> listener;
 
-    private int orientation;
+    private int srv_orientation;
 
     /**
-     * The anchor to which a View (ViewHolder) should snap too, the START, CENTER or END
+     * The srv_anchor to which a View (ViewHolder) should snap too, the START, CENTER or END
      */
-    private int anchor;
+    private int srv_anchor;
 
     /**
      * The smooth scroll speed, in ms per inch, this is 100 by default in our custom smooth
@@ -84,8 +85,8 @@ public class SnappingRecyclerView extends RecyclerView {
     private void initialise(Context context, @Nullable AttributeSet attrs) {
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SnappingRecyclerView, 0, 0);
         try {
-            orientation = a.getInt(R.styleable.SnappingRecyclerView_orientation, VERTICAL);
-            anchor = a.getInt(R.styleable.SnappingRecyclerView_anchor, CENTER);
+            srv_orientation = a.getInt(R.styleable.SnappingRecyclerView_srv_orientation, VERTICAL);
+            srv_anchor = a.getInt(R.styleable.SnappingRecyclerView_srv_anchor, CENTER);
             scrollSpeed = a.getFloat(R.styleable.SnappingRecyclerView_scrollSpeed, -1);
             flingThreshold = a.getInt(R.styleable.SnappingRecyclerView_flingThreshold, DEFAULT_FLING_THRESHOLD);
         } finally {
@@ -93,8 +94,8 @@ public class SnappingRecyclerView extends RecyclerView {
         }
 
         layoutManager = new CenterLayoutManager(getContext());
-        layoutManager.setOrientation(orientation == VERTICAL ? LinearLayoutManager.VERTICAL : LinearLayoutManager.HORIZONTAL);
-        layoutManager.setAnchor(anchor);
+        layoutManager.setOrientation(srv_orientation == VERTICAL ? RecyclerView.VERTICAL : RecyclerView.HORIZONTAL);
+        layoutManager.setAnchor(srv_anchor);
         layoutManager.setScrollSpeed(scrollSpeed);
         setLayoutManager(layoutManager);
     }
@@ -107,32 +108,32 @@ public class SnappingRecyclerView extends RecyclerView {
         this.listener = new WeakReference<>(listener);
     }
 
-    public void setOrientation(@OrientationMode int orientation) {
-        if (this.orientation != orientation) {
-            this.orientation = orientation;
+    public void setOrientation(@OrientationMode int srv_orientation) {
+        if (this.srv_orientation != srv_orientation) {
+            this.srv_orientation = srv_orientation;
 
-            layoutManager.setOrientation(orientation == VERTICAL ? LinearLayoutManager.VERTICAL : LinearLayoutManager.HORIZONTAL);
+            layoutManager.setOrientation(srv_orientation == VERTICAL ? RecyclerView.VERTICAL : RecyclerView.HORIZONTAL);
             requestLayout();
         }
     }
 
     @OrientationMode
     public int getOrientation() {
-        return orientation;
+        return srv_orientation;
     }
 
-    public void setAnchor(@AnchorMode int anchor) {
-        if (this.anchor != anchor) {
-            this.anchor = anchor;
+    public void setAnchor(@AnchorMode int srv_anchor) {
+        if (this.srv_anchor != srv_anchor) {
+            this.srv_anchor = srv_anchor;
 
-            layoutManager.setAnchor(anchor);
+            layoutManager.setAnchor(srv_anchor);
             requestLayout();
         }
     }
 
     @AnchorMode
     public int getAnchor() {
-        return anchor;
+        return srv_anchor;
     }
 
     @Override
@@ -159,7 +160,7 @@ public class SnappingRecyclerView extends RecyclerView {
 
     @Override
     public boolean fling(int velocityX, int velocityY) {
-        if(Math.abs(orientation == VERTICAL ? velocityY : velocityX) < flingThreshold) {
+        if(Math.abs(srv_orientation == VERTICAL ? velocityY : velocityX) < flingThreshold) {
             int centerViewPosition = calculateSnapViewPosition();
             smoothScrollToPosition(centerViewPosition);
 
@@ -177,7 +178,7 @@ public class SnappingRecyclerView extends RecyclerView {
     public void onScrollStateChanged(int state) {
         super.onScrollStateChanged(state);
 
-        /* Once a scroll has been completed smooth scroll to the nearest View based on the anchor */
+        /* Once a scroll has been completed smooth scroll to the nearest View based on the srv_anchor */
         if (state == SCROLL_STATE_IDLE) {
             int centerViewPosition = calculateSnapViewPosition();
             smoothScrollToPosition(centerViewPosition);
@@ -189,13 +190,13 @@ public class SnappingRecyclerView extends RecyclerView {
     }
 
     /**
-     * Provides the anchor of the parent, the RecyclerView, based on the provided orientation and
-     * anchor mode
+     * Provides the srv_anchor of the parent, the RecyclerView, based on the provided srv_orientation and
+     * srv_anchor mode
      *
-     * @param orientation The orientation of the RecyclerView, VERTICAL or HORIZONTAL
-     * @param anchor The RecyclerView's anchor mode, START, CENTER or END
+     * @param orientation The srv_orientation of the RecyclerView, VERTICAL or HORIZONTAL
+     * @param anchor The RecyclerView's srv_anchor mode, START, CENTER or END
      *
-     * @return The anchor of the parent, the RecyclerView
+     * @return The srv_anchor of the parent, the RecyclerView
      */
     private int getParentAnchor(@OrientationMode int orientation, @AnchorMode int anchor) {
         switch (anchor) {
@@ -210,14 +211,14 @@ public class SnappingRecyclerView extends RecyclerView {
     }
 
     /**
-     * Provides the anchor or the given view relative to the provided orientation and anchor.
+     * Provides the srv_anchor or the given view relative to the provided srv_orientation and srv_anchor.
      * This will be the View's start (top or left), center, or end (bottom or right).
      *
      * @param view
-     * @param orientation The orientation of the RecyclerView, VERTICAL or HORIZONTAL
-     * @param anchor The RecyclerView's anchor mode, START, CENTER or END
+     * @param orientation The srv_orientation of the RecyclerView, VERTICAL or HORIZONTAL
+     * @param anchor The RecyclerView's srv_anchor mode, START, CENTER or END
      *
-     * @return The anchor of the given View relative to the provided orientation and anchor
+     * @return The srv_anchor of the given View relative to the provided srv_orientation and srv_anchor
      */
     private int getViewAnchor(View view, @OrientationMode int orientation, @AnchorMode int anchor) {
         switch (anchor) {
@@ -232,26 +233,26 @@ public class SnappingRecyclerView extends RecyclerView {
     }
 
     /**
-     * Calculates the distance between the RecyclerView's anchor, either the start, center or end,
-     * and the View which is closest to the anchor.
+     * Calculates the distance between the RecyclerView's srv_anchor, either the start, center or end,
+     * and the View which is closest to the srv_anchor.
      *
-     * @return The distance between RecyclerView anchor and View closest to anchor
+     * @return The distance between RecyclerView srv_anchor and View closest to srv_anchor
      */
     private int calculateSnapDistance() {
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getLayoutManager();
 
-        int parentAnchor = getParentAnchor(orientation, anchor);
+        int parentAnchor = getParentAnchor(srv_orientation, srv_anchor);
 
         int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
         int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
 
         View currentViewClosestToAnchor = linearLayoutManager.findViewByPosition(firstVisibleItemPosition);
 
-        int currentViewClosestToAnchorDistance = parentAnchor - getViewAnchor(currentViewClosestToAnchor, orientation, anchor);
+        int currentViewClosestToAnchorDistance = parentAnchor - getViewAnchor(currentViewClosestToAnchor, srv_orientation, srv_anchor);
 
         for(int i = firstVisibleItemPosition + 1; i <= lastVisibleItemPosition; i++) {
             View view = linearLayoutManager.findViewByPosition(i);
-            int distanceToAnchor = parentAnchor - getViewAnchor(view, orientation, anchor);
+            int distanceToAnchor = parentAnchor - getViewAnchor(view, srv_orientation, srv_anchor);
 
             if (Math.abs(distanceToAnchor) < Math.abs(currentViewClosestToAnchorDistance)) {
                 currentViewClosestToAnchorDistance = distanceToAnchor;
@@ -262,29 +263,29 @@ public class SnappingRecyclerView extends RecyclerView {
     }
 
     /**
-     * Finds the position of the View which is closest to the RecyclerView's anchor, either the
+     * Finds the position of the View which is closest to the RecyclerView's srv_anchor, either the
      * RecyclerView's start, center or end
      *
-     * @return The position of the View closest the to RecyclerView's anchor
+     * @return The position of the View closest the to RecyclerView's srv_anchor
      */
     private int calculateSnapViewPosition() {
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getLayoutManager();
 
-        int parentAnchor = getParentAnchor(orientation, anchor);
+        int parentAnchor = getParentAnchor(srv_orientation, srv_anchor);
 
         int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
         int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
 
         View currentViewClosestToAnchor = linearLayoutManager.findViewByPosition(firstVisibleItemPosition);
 
-        int currentViewClosestToAnchorDistance = parentAnchor - getViewAnchor(currentViewClosestToAnchor, orientation, anchor);
+        int currentViewClosestToAnchorDistance = parentAnchor - getViewAnchor(currentViewClosestToAnchor, srv_orientation, srv_anchor);
 
         int currentViewClosestToAnchorPosition = firstVisibleItemPosition;
 
         for(int i = firstVisibleItemPosition + 1; i <= lastVisibleItemPosition; i++) {
             View view = linearLayoutManager.findViewByPosition(i);
 
-            int distanceToCenter = parentAnchor - getViewAnchor(view, orientation, anchor);
+            int distanceToCenter = parentAnchor - getViewAnchor(view, srv_orientation, srv_anchor);
 
             if (Math.abs(distanceToCenter) < Math.abs(currentViewClosestToAnchorDistance)) {
                 currentViewClosestToAnchorPosition = i;

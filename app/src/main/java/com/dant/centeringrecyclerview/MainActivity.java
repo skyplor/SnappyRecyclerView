@@ -1,9 +1,10 @@
 package com.dant.centeringrecyclerview;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.dant.centersnapreyclerview.SnappingRecyclerView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 

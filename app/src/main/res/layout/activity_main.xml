@@ -12,8 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:orientation="horizontal"
-        app:anchor="center"
+        app:srv_orientation="horizontal"
+        app:srv_anchor="center"
         tools:listitem="@layout/example_date_viewholder"/>
 
 </FrameLayout>

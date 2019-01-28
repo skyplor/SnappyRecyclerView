@@ -2,18 +2,18 @@
 <resources>
 
     <declare-styleable name="SnappingRecyclerView">
-        <attr name="orientation" />
-        <attr name="anchor" />
+        <attr name="srv_orientation" />
+        <attr name="srv_anchor" />
         <attr name="scrollSpeed" format="float" />
         <attr name="flingThreshold" format="integer" />
     </declare-styleable>
 
-    <attr name="orientation">
+    <attr name="srv_orientation">
         <enum name="vertical" value="0" />
         <enum name="horizontal" value="1" />
     </attr>
 
-    <attr name="anchor">
+    <attr name="srv_anchor">
         <enum name="center" value="0" />
         <enum name="start" value="1" />
         <enum name="end" value="2" />

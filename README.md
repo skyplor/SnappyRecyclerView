@@ -4,7 +4,7 @@
 
 # SnappyRecyclerView
 
-An extension to RecyclerView which will snap to child Views to the specified anchor, START, CENTER or END.
+An extension to RecyclerView which will snap to child Views to the specified srv_anchor, START, CENTER or END.
 
 <br/>
 <img src="./app/src/main/assets/demo.gif" alt="Demo Screen Capture" />
@@ -30,14 +30,14 @@ An extension to RecyclerView which will snap to child Views to the specified anc
     <com.dant.centersnapreyclerview.SnappingRecyclerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:orientation="horizontal"
-        app:anchor="center" />
+        app:srv_orientation="horizontal"
+        app:srv_anchor="center" />
 ```
 
 ### XML Attributes
 
-* **orientation** - the orientation of the recyclerview, VERTICAL or HORIZONTAL
-* **anchor** - the snap anchor of the recyclerview, START, CENTER or END
+* **srv_orientation** - the srv_orientation of the recyclerview, VERTICAL or HORIZONTAL
+* **srv_anchor** - the snap srv_anchor of the recyclerview, START, CENTER or END
 * **scrollSpeed** - the smooth scroll speed
 * **flingThreshold** - the threshold above which a fling is will occur
 
